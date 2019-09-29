@@ -1,12 +1,15 @@
 package com.example.notewise;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Folder {
 
     private String FolderName;
     private Timestamp FirstCreated;
     private Timestamp LastModified;
+
+    private List<File> ListOfFile;
 
     public Folder(String name) {
         this.FolderName = name;
@@ -34,5 +37,15 @@ public class Folder {
         this.LastModified = LastModified;
     }
 
+    public void AddNote(Note object) {
+        this.ListOfFile.add(object);
+    }
 
+    public void AddTodo(Todo object) {
+        this.ListOfFile.add(object);
+    }
+
+    public List<File> getListOfFile() {
+        return ListOfFile;
+    }
 }

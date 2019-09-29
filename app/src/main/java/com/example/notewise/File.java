@@ -6,6 +6,7 @@ public abstract class File {
     private String Name;
     private Timestamp FirstCreated;
     private Timestamp LastModified;
+    private int UniqueID;
 
     public File(String name) {
         this.Name = name;
@@ -37,4 +38,14 @@ public abstract class File {
         LastModified = lastModified;
     }
 
+    public void setID(int id) {
+        this.UniqueID = id;
+    }
+
+    public int getID() {
+        return UniqueID;
+    }
+
+
+    abstract int getType();
 }
