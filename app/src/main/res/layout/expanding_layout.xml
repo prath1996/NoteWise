@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
     Copyright (c) 2016, Diego Bezerra <diego.bezerra@gmail.com>
     Permission to use, copy, modify, and/or distribute this software for any purpose
@@ -12,16 +11,17 @@
     ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.diegodobelo.expandingview.ExpandingItem
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <com.diegodobelo.expandingview.ExpandingList
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/expanding_list_main"/>
-
-</RelativeLayout>
+    android:layout_height="wrap_content"
+    app:item_layout="@layout/expanding_item"
+    app:sub_item_layout="@layout/expanding_sub_item"
+    app:indicator_size="42dp"
+    app:indicator_margin_left="16dp"
+    app:indicator_margin_right="16dp"
+    app:show_indicator="true"
+    app:show_animation="true"
+    app:start_collapsed="true"
+    app:animation_duration="250"/>

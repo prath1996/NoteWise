@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 class MainAdapter extends BaseExpandableListAdapter {
 
@@ -31,7 +32,7 @@ class MainAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPos) {
-        return listItem.get(listGroup.get(groupPos)).size();
+        return Objects.requireNonNull(listItem.get(listGroup.get(groupPos))).size();
     }
 
     @Override
@@ -41,7 +42,7 @@ class MainAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPos, int childPos) {
-        return listItem.get(listGroup.get(groupPos)).get(childPos);
+        return Objects.requireNonNull(listItem.get(listGroup.get(groupPos))).get(childPos);
     }
 
     @Override
@@ -65,7 +66,7 @@ class MainAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater)this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_group_element,null);
+            convertView = inflater.inflate(R.layout.expanding_item,null);
         }
         TextView textView = convertView.findViewById(R.id.parent_text);
         textView.setText(group);
@@ -75,12 +76,12 @@ class MainAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPos, int childPos, boolean isLastChild, View convertView, ViewGroup viewGroup) {
-        String child = listItem.get(listGroup.get(groupPos)).get(childPos);
+        String child = Objects.requireNonNull(listItem.get(listGroup.get(groupPos))).get(childPos);
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater)this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_child_element, null);
+            convertView = inflater.inflate(R.layout.expanding_sub_item, null);
         }
 
         TextView textView = convertView.findViewById(R.id.child_text);
