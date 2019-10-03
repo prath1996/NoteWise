@@ -8,7 +8,6 @@ public class Folder {
     private String FolderName;
     private Timestamp FirstCreated;
     private Timestamp LastModified;
-
     private List<File> ListOfFile;
 
     public Folder(String name) {
@@ -28,7 +27,7 @@ public class Folder {
     public Timestamp getFirstCreated() {
         return FirstCreated;
     }
-    
+
     public Timestamp getLastModified() {
         return LastModified;
     }
@@ -37,11 +36,7 @@ public class Folder {
         this.LastModified = LastModified;
     }
 
-    public void AddNote(Note object) {
-        this.ListOfFile.add(object);
-    }
-
-    public void AddTodo(Todo object) {
+    public void AddFile(File object) {
         this.ListOfFile.add(object);
     }
 

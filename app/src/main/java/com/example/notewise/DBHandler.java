@@ -1,6 +1,10 @@
 package com.example.notewise;
 
 // Base Stitch Packages
+import android.os.Debug;
+import android.util.Log;
+
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import com.mongodb.stitch.android.core.Stitch;
@@ -13,7 +17,16 @@ import com.mongodb.client.MongoCollection;
 // Necessary component for working with MongoDB Mobile
 import com.mongodb.stitch.android.services.mongodb.local.LocalMongoDbService;
 
-import java.util.Set;
+import org.bson.Document;
+import org.bson.conversions.Bson;
+
+import java.io.Console;
+import java.sql.Timestamp;
+
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.currentDate;
+import static com.mongodb.client.model.Updates.set;
 
 public class DBHandler {
     private static DBHandler instance;
@@ -25,9 +38,15 @@ public class DBHandler {
     private final String FOLDER_COLLECTION = "folder_coll";
     private final String FILE_COLLECTION = "file_coll";
 
+    private final String ID = "_ID";
+    private final String LAST_MODIFIED = "lmod";
+    private final String TEXT_CONTENT = "txt";
+
+    private final String DB_MOD_ERROR = "dberr";
+
     private MongoDatabase mongoDB;
-    private MongoCollection folderCollection;
-    private MongoCollection fileCollection;
+    private MongoCollection<Document> folderCollection;
+    private MongoCollection<Document> fileCollection;
 
     public static DBHandler getInstance() {
         if (instance == null) {
@@ -69,24 +88,43 @@ public class DBHandler {
         return false;
     }
 
-    public void createTODO() {
-
+    public void createFileElement(FileElement element) {
+        Document doc = new Document();
+        doc.put(TEXT_CONTENT, element.getText());
+        doc.put(LAST_MODIFIED, element.getLastModified());
+        insert(doc);
+        element.setID((String)doc.get(ID));
     }
 
-    public void createNote() {
-
+    public void updateFileElement(FileElement element) {
+        Document doc = new Document();
+        Bson filter = eq(ID, element.getID());
+        Bson query = combine(set(TEXT_CONTENT, element.getText()), set(LAST_MODIFIED, element.getLastModified()));
+        update(filter, query);
     }
 
-    public void insert() {
-
+    private void insert(Document document) {
+        try {
+            fileCollection.insertOne(document);
+        } catch (MongoException e) {
+            Log.println(1, DB_MOD_ERROR, e.getMessage());
+        }
     }
 
-    public void update() {
-
+    private void update(Bson filter, Bson updateQuery) {
+        try {
+            fileCollection.updateOne(filter, updateQuery);
+        } catch (MongoException e) {
+            Log.println(1, DB_MOD_ERROR, e.getMessage());
+        }
     }
 
-    public void delete() {
-
+    public void deleteFolder(Bson filter) {
+        try {
+            fileCollection.deleteOne(filter);
+        } catch (MongoException e) {
+            Log.println(1, DB_MOD_ERROR, e.getMessage());
+        }
     }
 
 }

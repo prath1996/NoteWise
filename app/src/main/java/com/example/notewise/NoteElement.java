@@ -1,22 +1,49 @@
 package com.example.notewise;
 
-public class NoteElement {
+import java.sql.Timestamp;
 
-    private String Text;
+public class NoteElement implements FileElement {
+
+    private String id;
+    private String text;
+    private Timestamp lastModified;
 
     public NoteElement(String text) {
-        Text = text;
+        this.text = text;
     }
 
-    public NoteElement() {
+    @Override
+    public String getID() {
+        return id;
     }
 
+    @Override
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    @Override
     public String getText() {
-        return Text;
+        return text;
     }
 
+    @Override
     public void setText(String text) {
-        Text = text;
+        this.text = text;
+        this.lastModified = new Timestamp(System.currentTimeMillis());
     }
+
+    @Override
+    public Timestamp getLastModified() {
+        return lastModified;
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return false;
+    }
+
+    @Override
+    public void setCompleted(boolean completed) {}
 
 }
