@@ -4,17 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Debug;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
+import com.noodle.Noodle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        instantiateDBInstance();
+        FileManager fmInstance = FileManager.getInstance();
+//        fmInstance.createFolder("My folder");
+
+        HashMap<Long, Folder> folders = fmInstance.getAllFolders();
 
         listGroup = new ArrayList<>();
         listItem = new HashMap<>();
@@ -53,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 //            item.setIndicatorIconRes(R.drawable.ic_icon);
         }
 
+    }
+
+    private void instantiateDBInstance() {
+        DBHandler.init(this);
     }
 
     private void initListData() {

@@ -4,46 +4,54 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public abstract class File {
-    private String Name;
-    private Timestamp LastModified;
-    private int UniqueID;
-    private List<FileElement>ListOfElements;
+    private String name;
+    private Timestamp lastModified;
+    private int uniqueID;
+    private List<FileElement> elements;
 
     public File(String name) {
-        this.Name = name;
-        this.LastModified = new Timestamp(System.currentTimeMillis());
+        this.name = name;
+        this.lastModified = new Timestamp(System.currentTimeMillis());
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public Timestamp getLastModified() {
-        return LastModified;
+        return lastModified;
     }
 
     public void setLastModified(Timestamp lastModified) {
-        LastModified = lastModified;
+        this.lastModified = lastModified;
     }
 
     public void setID(int id) {
-        this.UniqueID = id;
+        this.uniqueID = id;
     }
 
     public int getID() {
-        return UniqueID;
+        return uniqueID;
     }
 
-    public List getListOfElement() {
-        return ListOfElements;
+    public List getElements() {
+        return elements;
     }
 
-    public void addElement(NoteElement Element) {
-        this.ListOfElements.add(Element);
+    public void addElement(FileElement Element) {
+        this.elements.add(Element);
+    }
+
+    public void deleteElement(int index) {
+        this.elements.remove(index);
+    }
+
+    public void updateElement(int index, String newContent) {
+        this.elements.get(index).setText(newContent);
     }
 
     abstract int getType();

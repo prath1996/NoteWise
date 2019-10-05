@@ -11,6 +11,6 @@ public class NoteFile extends File {
 
     @Override
     int getType() {
-        return 1;
+        return 0;
     }
 }

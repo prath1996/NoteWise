@@ -11,7 +11,7 @@ public class TodoFile extends File {
 
     @Override
     int getType() {
-        return 0;
+        return 1;
     }
 
 }
