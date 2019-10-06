@@ -3,18 +3,33 @@ package com.example.notewise;
 import com.noodle.Id;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.IntStream;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 public class Folder {
-
     @Id
     long id;
 
     private String folderName;
     private Timestamp firstCreated;
     private Timestamp lastModified;
-    private HashMap<String, File> files;
+    private List<File> files;
+
+    private File getFile(String fileName) {
+        for(File file: files) {
+            if (file.getName() == fileName) {
+                return file;
+            }
+        }
+        return null;
+    }
 
     public Folder(String name) {
         this.folderName = name;
@@ -56,61 +71,74 @@ public class Folder {
         this.lastModified = lastModified;
     }
 
-    public void AddFile(File file) {
-        this.files.put(file.getName(), file);
-    }
-
     public void rename(String newName) {
         this.folderName = newName;
     }
 
 
     // Files
-    public HashMap<String, File> getFiles() {
+    public void sortByDate() {
+//        files.sort((o1, o2) -> o1.getLastModified().compareTo(o2.getLastModified()));
+    }
+
+    public void sortByName() {
+
+    }
+
+    public List<File> getFiles() {
         return files;
     }
 
-    public void setFiles(HashMap<String, File> files) {
-        this.files = files;
+    public void addFile(File file) {
+        if (files == null) {
+            files = new ArrayList<>();
+        }
+        this.files.add(file);
+
     }
+
+//    public void setFiles(TreeMap<String, File> files) {
+//        this.files = files;
+//    }
 
     public void deleteFile(String fileName) {
         files.remove(fileName);
     }
 
     public void renameFile(String oldName, String newName) {
-        File file = files.get(oldName);
-        files.remove(oldName);
-        files.put(newName, file);
+        File file = getFile(oldName);
+        if (file != null) {
+            file.setName(newName);
+        }
     }
 
 
     // File Elements
     public void addNoteElement(String content, String fileName) {
-        File file = files.get(fileName);
-        FileElement element = new NoteElement(content);
+        File file = getFile(fileName);
         if (file != null) {
+            FileElement element = new NoteElement(content);
             file.addElement(element);
         }
     }
 
     public void addTodoElement(String content, String fileName) {
-        File file = files.get(fileName);
-        FileElement element = new TodoElement(content);
+        File file = getFile(fileName);
         if (file != null) {
+            FileElement element = new TodoElement(content);
             file.addElement(element);
         }
     }
 
     public void deleteElement(int index, String fileName) {
-        File file = files.get(fileName);
+        File file = getFile(fileName);
         if (file != null) {
             file.deleteElement(index);
         }
     }
 
     public void updateElement(int index, String newContent, String fileName) {
-        File file = files.get(fileName);
+        File file = getFile(fileName);
         if (file != null) {
             file.updateElement(index, newContent);
         }

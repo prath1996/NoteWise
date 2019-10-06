@@ -1,6 +1,10 @@
 package com.example.notewise;
 
+import android.util.Log;
+
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FileManager {
     private static FileManager fmInstance;
@@ -12,7 +16,6 @@ public class FileManager {
     private class ContextInfo {
         long folderID;
         String fileName;
-        int fileElementIndex;
     }
 
     private FileManager() {
@@ -25,6 +28,15 @@ public class FileManager {
         return folderDict.get(id);
     }
 
+    public Folder getFolder(String folderName) {
+        for (Map.Entry<Long, Folder>entry : folderDict.entrySet()) {
+            if (entry.getValue().getName().equals(folderName)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
     public static FileManager getInstance() {
         if (fmInstance == null) {
             fmInstance = new FileManager();
@@ -32,10 +44,18 @@ public class FileManager {
         return fmInstance;
     }
 
+    public void updateContext(long folderID) {
+        Log.e("notewise", "context update to " + String.valueOf(folderID));
+        contextInfo.folderID = folderID;
+    }
+
+    public void updateContext(String fileName) {
+        contextInfo.fileName = fileName;
+    }
+
     public void updateContext(long folderID, String fileName, int fileElementIndex) {
         contextInfo.folderID = folderID;
         contextInfo.fileName = fileName;
-        contextInfo.fileElementIndex = fileElementIndex;
     }
 
 
@@ -43,9 +63,12 @@ public class FileManager {
 
     // Folders
     public Folder createFolder(String folderName) {
-        Folder folder = new Folder(folderName);
-        dbHandler.createFolder(folder);
-        return folder;
+        if (getFolder(folderName) == null) {
+            Folder folder = new Folder(folderName);
+            dbHandler.createFolder(folder);
+            return folder;
+        }
+        return null;
     }
 
     public void deleteFolder(long folderID) {
@@ -69,14 +92,14 @@ public class FileManager {
     public void createNoteFile(String fileName) {
         Folder folder = getFolder(contextInfo.folderID);
         File file = new NoteFile(fileName);
-        folder.AddFile(file);
+        folder.addFile(file);
         dbHandler.addToUpdate(contextInfo.folderID);
     }
 
     public void createTodoFile(String fileName) {
         Folder folder = getFolder(contextInfo.folderID);
         File file = new TodoFile(fileName);
-        folder.AddFile(file);
+        folder.addFile(file);
         dbHandler.addToUpdate(contextInfo.folderID);
     }
     
@@ -92,8 +115,13 @@ public class FileManager {
         dbHandler.addToUpdate(contextInfo.folderID);
     }
 
-    public HashMap<String, File> getAllFiles() {
+    public List<File> getAllFiles() {
         Folder folder = getFolder(contextInfo.folderID);
+        return folder.getFiles();
+    }
+
+    public List<File> getAllFiles(long folderID) {
+        Folder folder = getFolder(folderID);
         return folder.getFiles();
     }
 

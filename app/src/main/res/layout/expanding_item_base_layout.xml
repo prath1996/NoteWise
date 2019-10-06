@@ -65,8 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/base_list_layout"
-        android:layout_alignStart="@id/base_list_layout"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        android:layout_alignLeft="@id/base_list_layout"
+        android:layout_alignStart="@id/base_list_layout" />
 
     <ViewStub
         android:id="@+id/base_separator_stub"

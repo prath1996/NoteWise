@@ -18,7 +18,7 @@ import java.util.Set;
 public class DBHandler {
     private static DBHandler instance;
 
-    private static Noodle noodleInstance;
+    private Noodle noodleInstance;
 
     private final String DB_MOD_ERROR = "dberr";
 
@@ -26,25 +26,25 @@ public class DBHandler {
 
     private Collection<Folder> folderCollection;
 
-    public static void init(Context context) {
-        noodleInstance = Noodle.with(context).addType(Folder.class).build();
-        instance = new DBHandler();
+    public static void init(Collection<Folder> folderCollection) {
+        instance = new DBHandler(folderCollection);
+
     }
 
     public static DBHandler getInstance() {
         return instance;
     }
 
-    private DBHandler() {
+    private DBHandler(Collection<Folder> folderCollection) {
         updateKeys = new HashSet<>();
-        folderCollection = noodleInstance.collectionOf(Folder.class);
+        this.folderCollection = folderCollection;
     }
 
     public void createFolder(Folder folder) {
         try {
             folderCollection.put(folder);
         } catch (Exception e) {
-            Log.println(1, DB_MOD_ERROR, e.getMessage());
+            Log.e(DB_MOD_ERROR, e.getMessage());
         }
     }
 
@@ -56,14 +56,13 @@ public class DBHandler {
         try {
             folderCollection.delete(folderID);
         } catch (Exception e) {
-            Log.println(1, DB_MOD_ERROR, e.getMessage());
+            Log.e(DB_MOD_ERROR, e.getMessage());
         }
     }
 
     public HashMap<Long, Folder> getAllData() {
-        List<Folder> folderList = folderCollection.getAll();
         HashMap<Long, Folder> folderMap = new HashMap<>();
-        for (Folder folder:folderList) {
+        for (Folder folder:folderCollection.getAll()) {
             folderMap.put(folder.getID(), folder);
         }
         return folderMap;
