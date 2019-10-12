@@ -1,6 +1,4 @@
-package com.example.notewise;
-
-import android.util.Log;
+package FileHandling;
 
 import java.sql.Timestamp;
 
@@ -11,15 +9,11 @@ public class TodoElement implements FileElement {
     private boolean completed;
     private Timestamp lastModified;
 
-    public TodoElement(String text) {
+    TodoElement(String text) {
         this.text = text;
     }
 
     public TodoElement() {
-    }
-
-    public void hello() {
-        Log.println(1,"12", "hello");
     }
 
     @Override

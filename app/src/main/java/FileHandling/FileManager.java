@@ -1,4 +1,4 @@
-package com.example.notewise;
+package FileHandling;
 
 import android.util.Log;
 
@@ -24,19 +24,6 @@ public class FileManager {
         contextInfo = new ContextInfo();
     }
 
-    public Folder getFolder(long id) {
-        return folderDict.get(id);
-    }
-
-    public Folder getFolder(String folderName) {
-        for (Map.Entry<Long, Folder>entry : folderDict.entrySet()) {
-            if (entry.getValue().getName().equals(folderName)) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
-
     public static FileManager getInstance() {
         if (fmInstance == null) {
             fmInstance = new FileManager();
@@ -53,7 +40,7 @@ public class FileManager {
         contextInfo.fileName = fileName;
     }
 
-    public void updateContext(long folderID, String fileName, int fileElementIndex) {
+    public void updateContext(long folderID, String fileName) {
         contextInfo.folderID = folderID;
         contextInfo.fileName = fileName;
     }
@@ -66,7 +53,21 @@ public class FileManager {
         if (getFolder(folderName) == null) {
             Folder folder = new Folder(folderName);
             dbHandler.createFolder(folder);
+            folderDict.put(folder.getID(), folder);
             return folder;
+        }
+        return null;
+    }
+
+    public Folder getFolder(long id) {
+        return folderDict.get(id);
+    }
+
+    public Folder getFolder(String folderName) {
+        for (Map.Entry<Long, Folder>entry : folderDict.entrySet()) {
+            if (entry.getValue().getName().equals(folderName)) {
+                return entry.getValue();
+            }
         }
         return null;
     }
@@ -80,6 +81,7 @@ public class FileManager {
         Folder folder = getFolder(folderID);
         folder.rename(newName);
         dbHandler.addToUpdate(contextInfo.folderID);
+        dbHandler.update();
     }
 
     public HashMap<Long, Folder> getAllFolders() {
@@ -89,30 +91,42 @@ public class FileManager {
 
 
     // Files
-    public void createNoteFile(String fileName) {
+    public void addNoteFile(String fileName) {
         Folder folder = getFolder(contextInfo.folderID);
-        File file = new NoteFile(fileName);
-        folder.addFile(file);
-        dbHandler.addToUpdate(contextInfo.folderID);
+        if (folder != null) {
+            File file = new NoteFile(fileName);
+            folder.addFile(file);
+            dbHandler.addToUpdate(contextInfo.folderID);
+            dbHandler.update();
+        }
     }
 
-    public void createTodoFile(String fileName) {
+    public void addTodoFile(String fileName) {
         Folder folder = getFolder(contextInfo.folderID);
-        File file = new TodoFile(fileName);
-        folder.addFile(file);
-        dbHandler.addToUpdate(contextInfo.folderID);
+        if (folder != null) {
+            File file = new TodoFile(fileName);
+            folder.addFile(file);
+            dbHandler.addToUpdate(contextInfo.folderID);
+            dbHandler.update();
+        }
     }
     
     public void deleteFile(String fileName) {
         Folder folder = getFolder(contextInfo.folderID);
-        folder.deleteFile(fileName);
-        dbHandler.addToUpdate(contextInfo.folderID);
+        if (folder != null) {
+            folder.deleteFile(fileName);
+            dbHandler.addToUpdate(contextInfo.folderID);
+            dbHandler.update();
+        }
     }
 
     public void renameFile(String oldName, String newName) {
         Folder folder = getFolder(contextInfo.folderID);
-        folder.renameFile(oldName, newName);
-        dbHandler.addToUpdate(contextInfo.folderID);
+        if (folder != null) {
+            folder.renameFile(oldName, newName);
+            dbHandler.addToUpdate(contextInfo.folderID);
+            dbHandler.update();
+        }
     }
 
     public List<File> getAllFiles() {
@@ -133,18 +147,21 @@ public class FileManager {
         Folder folder = getFolder(contextInfo.folderID);
         folder.addNoteElement(content, contextInfo.fileName);
         dbHandler.addToUpdate(contextInfo.folderID);
+        dbHandler.update();
     }
 
     public void addTodoElement(String content) {
         Folder folder = getFolder(contextInfo.folderID);
         folder.addTodoElement(content, contextInfo.fileName);
         dbHandler.addToUpdate(contextInfo.folderID);
+        dbHandler.update();
     }
 
     public void updateFileElement(int index, String newContent) {
         Folder folder = getFolder(contextInfo.folderID);
         folder.updateElement(index, newContent, contextInfo.fileName);
         dbHandler.addToUpdate(contextInfo.folderID);
+        dbHandler.update();
     }
 
 

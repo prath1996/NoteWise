@@ -1,19 +1,13 @@
-package com.example.notewise;
+package FileHandling;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.noodle.Noodle;
 import com.noodle.collection.Collection;
 
-import java.io.Console;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class DBHandler {
     private static DBHandler instance;
@@ -28,7 +22,7 @@ public class DBHandler {
 
     public static void init(Collection<Folder> folderCollection) {
         instance = new DBHandler(folderCollection);
-
+//        folderCollection.clear();
     }
 
     public static DBHandler getInstance() {
@@ -62,7 +56,7 @@ public class DBHandler {
 
     public HashMap<Long, Folder> getAllData() {
         HashMap<Long, Folder> folderMap = new HashMap<>();
-        for (Folder folder:folderCollection.getAll()) {
+        for (Folder folder:this.folderCollection.getAll()) {
             folderMap.put(folder.getID(), folder);
         }
         return folderMap;

@@ -23,6 +23,18 @@
     <com.diegodobelo.expandingview.ExpandingList
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/expanding_list_main"/>
+        android:id="@+id/expanding_list_main">
+    </com.diegodobelo.expandingview.ExpandingList>
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/floatingActionButton"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        app:srcCompat="@android:drawable/ic_menu_add"-->
+<!--        android:layout_alignParentEnd="true" />-->
 
 </RelativeLayout>

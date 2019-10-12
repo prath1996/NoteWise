@@ -1,4 +1,4 @@
-package com.example.notewise;
+package FileHandling;
 
 import java.sql.Timestamp;
 
@@ -8,7 +8,7 @@ public class NoteElement implements FileElement {
     private String text;
     private Timestamp lastModified;
 
-    public NoteElement(String text) {
+    NoteElement(String text) {
         this.text = text;
     }
 

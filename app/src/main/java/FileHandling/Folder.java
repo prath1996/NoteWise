@@ -1,21 +1,15 @@
-package com.example.notewise;
+package FileHandling;
 
 import com.noodle.Id;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
-import java.util.stream.IntStream;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 public class Folder {
+
     @Id
-    long id;
+    private long id;
 
     private String folderName;
     private Timestamp firstCreated;
@@ -24,14 +18,14 @@ public class Folder {
 
     private File getFile(String fileName) {
         for(File file: files) {
-            if (file.getName() == fileName) {
+            if (file.getName().equals(fileName)) {
                 return file;
             }
         }
         return null;
     }
 
-    public Folder(String name) {
+    Folder(String name) {
         this.folderName = name;
         this.firstCreated = new Timestamp(System.currentTimeMillis());
         this.lastModified = this.firstCreated;
@@ -43,7 +37,7 @@ public class Folder {
         return id;
     }
 
-    public void setID(long id) {
+    void setID(long id) {
         this.id = id;
     }
 
@@ -51,61 +45,68 @@ public class Folder {
         return folderName;
     }
 
-    public void setName(String folderName) {
+    void setName(String folderName) {
         this.folderName = folderName;
     }
 
-    public Timestamp getFirstCreated() {
+    Timestamp getFirstCreated() {
         return firstCreated;
     }
 
-    public void setFirstCreated(Timestamp firstCreated) {
+    void setFirstCreated(Timestamp firstCreated) {
         this.firstCreated = firstCreated;
     }
 
-    public Timestamp getLastModified() {
+    Timestamp getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Timestamp lastModified) {
+    void setLastModified(Timestamp lastModified) {
         this.lastModified = lastModified;
     }
 
-    public void rename(String newName) {
+    void rename(String newName) {
         this.folderName = newName;
     }
 
 
     // Files
-    public void sortByDate() {
+    void sortByDate() {
 //        files.sort((o1, o2) -> o1.getLastModified().compareTo(o2.getLastModified()));
     }
 
-    public void sortByName() {
+    void sortByName() {
 
     }
 
-    public List<File> getFiles() {
+    List<File> getFiles() {
         return files;
     }
 
-    public void addFile(File file) {
+    void addFile(File file) {
         if (files == null) {
             files = new ArrayList<>();
         }
+        for (File f : files) {
+            if (f.getName().equals(file.getName())) {
+                return;
+            }
+        }
         this.files.add(file);
-
     }
 
 //    public void setFiles(TreeMap<String, File> files) {
 //        this.files = files;
 //    }
 
-    public void deleteFile(String fileName) {
-        files.remove(fileName);
+    void deleteFile(String fileName) {
+        File file = getFile(fileName);
+        if (file != null) {
+            files.remove(file);
+        }
     }
 
-    public void renameFile(String oldName, String newName) {
+    void renameFile(String oldName, String newName) {
         File file = getFile(oldName);
         if (file != null) {
             file.setName(newName);
@@ -114,7 +115,7 @@ public class Folder {
 
 
     // File Elements
-    public void addNoteElement(String content, String fileName) {
+    void addNoteElement(String content, String fileName) {
         File file = getFile(fileName);
         if (file != null) {
             FileElement element = new NoteElement(content);
@@ -122,7 +123,7 @@ public class Folder {
         }
     }
 
-    public void addTodoElement(String content, String fileName) {
+    void addTodoElement(String content, String fileName) {
         File file = getFile(fileName);
         if (file != null) {
             FileElement element = new TodoElement(content);
@@ -130,14 +131,14 @@ public class Folder {
         }
     }
 
-    public void deleteElement(int index, String fileName) {
+    void deleteElement(int index, String fileName) {
         File file = getFile(fileName);
         if (file != null) {
             file.deleteElement(index);
         }
     }
 
-    public void updateElement(int index, String newContent, String fileName) {
+    void updateElement(int index, String newContent, String fileName) {
         File file = getFile(fileName);
         if (file != null) {
             file.updateElement(index, newContent);

@@ -1,4 +1,4 @@
-package com.example.notewise;
+package FileHandling;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -9,7 +9,7 @@ public abstract class File {
     private int uniqueID;
     private List<FileElement> elements;
 
-    public File(String name) {
+    File(String name) {
         this.name = name;
         this.lastModified = new Timestamp(System.currentTimeMillis());
     }
@@ -18,39 +18,39 @@ public abstract class File {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
-    public Timestamp getLastModified() {
+    Timestamp getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Timestamp lastModified) {
+    void setLastModified(Timestamp lastModified) {
         this.lastModified = lastModified;
     }
 
-    public void setID(int id) {
+    void setID(int id) {
         this.uniqueID = id;
     }
 
-    public int getID() {
+    int getID() {
         return uniqueID;
     }
 
-    public List getElements() {
+    List getElements() {
         return elements;
     }
 
-    public void addElement(FileElement Element) {
+    void addElement(FileElement Element) {
         this.elements.add(Element);
     }
 
-    public void deleteElement(int index) {
+    void deleteElement(int index) {
         this.elements.remove(index);
     }
 
-    public void updateElement(int index, String newContent) {
+    void updateElement(int index, String newContent) {
         this.elements.get(index).setText(newContent);
     }
 
