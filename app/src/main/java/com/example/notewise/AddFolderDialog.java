@@ -3,7 +3,6 @@ package com.example.notewise;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,24 +15,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-public class AddNewFileDialog extends DialogFragment {
 
+public class AddFolderDialog extends DialogFragment {
     public interface NoticeDialogListener {
-        void createNoteFile(String fileName);
-        void createTodoFile(String fileName);
+        void createFolder(String fileName);
     }
 
-    // Use this instance of the interface to deliver action events
-    NoticeDialogListener listener;
+    AddFolderDialog.NoticeDialogListener listener;
 
-    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            listener = (NoticeDialogListener) context;
+            listener = (AddFolderDialog.NoticeDialogListener) context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             Log.e("notewise", e.getMessage());
@@ -49,42 +45,28 @@ public class AddNewFileDialog extends DialogFragment {
 
         LinearLayout layout = (LinearLayout)inflater.inflate(R.layout.add_new, null);
         EditText editText = layout.findViewById(R.id.new_name);
-        editText.setHint(R.string.add_file_hint);
+        editText.setHint(R.string.add_folder_hint);
 
-        builder.setMessage(R.string.add_new_file)
+        builder.setMessage(R.string.add_new_folder)
                 .setView(layout)
-                .setPositiveButton(R.string.create_note_file, null)
-                .setNegativeButton(R.string.create_todo_file, null)
-                .setNeutralButton(R.string.cancel, (dialog, id) -> {
+                .setPositiveButton(R.string.create_folder, null)
+                .setNegativeButton(R.string.cancel, (dialog, id) -> {
                     dialog.dismiss();
                 });
 
         AlertDialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
-
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             button.setOnClickListener(view -> {
-                String fileName = editText.getText().toString();
-                if (nameOK(fileName, layout)) {
-                    listener.createNoteFile(fileName);
-                    dialog.dismiss();
-                }
-            });
-
-            button = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            button.setOnClickListener(view -> {
-                String fileName = editText.getText().toString();
-                if (nameOK(fileName, layout)) {
-                    listener.createTodoFile(fileName);
+                String folderName = editText.getText().toString();
+                if (nameOK(folderName, layout)) {
+                    listener.createFolder(folderName);
                     dialog.dismiss();
                 }
             });
         });
-
         return dialog;
     }
-
-
 
     private boolean nameOK(String name, LinearLayout layout) {
         if (name.equals("")) {
@@ -96,4 +78,5 @@ public class AddNewFileDialog extends DialogFragment {
         }
         return true;
     }
+
 }

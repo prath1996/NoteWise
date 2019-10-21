@@ -1,14 +1,20 @@
 <resources>
     <string name="app_name">NoteWise</string>
-
     <string name="group1">Group1</string>
     <string name="group2">Group2</string>
     <string name="group3">Group3</string>
     <string name="create_note_file">Create NoteFile</string>
     <string name="create_todo_file">Create TodoFile</string>
+    <string name="create_folder">Create Folder</string>
     <string name="cancel">Cancel</string>
-    <string name="add_new_file">Create new file</string>
-    <string name="add_file_hint">New file…</string>
+    <string name="add_new_file">Create New File</string>
+    <string name="add_new_folder">Create New Folder</string>
+    <string name="add_file_hint">My File…</string>
+    <string name="add_folder_hint">My Folder…</string>
+    <string name="name_empty">Name can\'t be empty</string>
+    <string name="delete_folder">Delete folder</string>
+    <string name="rename_folder">Rename folder</string>
+
 
     <string-array name="group1">
         <item>item1</item>

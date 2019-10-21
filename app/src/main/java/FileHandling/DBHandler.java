@@ -2,70 +2,86 @@ package FileHandling;
 
 import android.util.Log;
 
-import com.noodle.Noodle;
-import com.noodle.collection.Collection;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class DBHandler {
-    private static DBHandler instance;
+import io.paperdb.Paper;
 
-    private Noodle noodleInstance;
+public class DBHandler {
+
+    private static DBHandler instance;
+    private static final int IDlength = 5;
 
     private final String DB_MOD_ERROR = "dberr";
+    private HashSet<String> updateKeys;
 
-    private HashSet<Long> updateKeys;
 
-    private Collection<Folder> folderCollection;
-
-    public static void init(Collection<Folder> folderCollection) {
-        instance = new DBHandler(folderCollection);
-//        folderCollection.clear();
-    }
-
-    public static DBHandler getInstance() {
+    static DBHandler getInstance() {
+        if (instance == null) {
+            instance = new DBHandler();
+        }
         return instance;
     }
 
-    private DBHandler(Collection<Folder> folderCollection) {
+    private DBHandler() {
+        Paper.book().destroy();
         updateKeys = new HashSet<>();
-        this.folderCollection = folderCollection;
     }
 
-    public void createFolder(Folder folder) {
+    private String createFolderID() {
+        String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
+
+        StringBuilder sb = new StringBuilder(IDlength);
+        do {
+            for (int i = 0; i < IDlength; i++) {
+                int index = (int)(alphaNumericString.length() * Math.random());
+                sb.append(alphaNumericString.charAt(index));
+            }
+        } while (Paper.book().contains(sb.toString()));
+
+        return sb.toString();
+    }
+
+    void createFolder(Folder folder) {
         try {
-            folderCollection.put(folder);
+            folder.setID(createFolderID());
+            Paper.book().write(folder.getID(), folder);
         } catch (Exception e) {
             Log.e(DB_MOD_ERROR, e.getMessage());
         }
     }
 
-    public void addToUpdate(long folderID) {
+    void addToUpdate(String folderID) {
         updateKeys.add(folderID);
     }
 
-    public void deleteFolder(long folderID) {
+    void deleteFolder(String folderID) {
         try {
-            folderCollection.delete(folderID);
+            Paper.book().delete("folderID");
         } catch (Exception e) {
             Log.e(DB_MOD_ERROR, e.getMessage());
         }
     }
 
-    public HashMap<Long, Folder> getAllData() {
-        HashMap<Long, Folder> folderMap = new HashMap<>();
-        for (Folder folder:this.folderCollection.getAll()) {
-            folderMap.put(folder.getID(), folder);
+    HashMap<String, Folder> getAllData() {
+        HashMap<String, Folder> folderMap = new HashMap<>();
+        List<String> allKeys = Paper.book().getAllKeys();
+        if (allKeys.size() > 0) {
+            for (String key : allKeys) {
+                folderMap.put(key, Paper.book().read(key));
+            }
         }
         return folderMap;
     }
 
-    public void update() {
-        for (Long folderID:updateKeys) {
-            Folder folder = FileManager.getInstance().getFolder(folderID);
-            folderCollection.put(folder);
+    void update() {
+        if (updateKeys.isEmpty()) {
+            return;
+        }
+        for (String folderID:updateKeys) {
+            Folder folder = FileManager.getInstance().getFolder(folderID, false);
+            Paper.book().write(folder.getID(), folder);
         }
     }
 }

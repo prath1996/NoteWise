@@ -21,20 +21,50 @@
 
 
     <com.diegodobelo.expandingview.ExpandingList
+        android:id="@+id/expanding_list_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/expanding_list_main">
-    </com.diegodobelo.expandingview.ExpandingList>
+        android:layout_height="match_parent"/>
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/floatingActionButton"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        app:srcCompat="@android:drawable/ic_menu_add"-->
-<!--        android:layout_alignParentEnd="true" />-->
+    <RelativeLayout
+        android:id="@+id/floating_layout_homescene"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageButton
+            android:id="@+id/add_floating_btn_homescene"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:onClick="onFloatingAddBtnClick"
+            app:srcCompat="@android:drawable/ic_menu_add" />
+
+        <RelativeLayout
+            android:id="@+id/add_floating_expand_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/add_floating_btn_homescene"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/add_folder_expand_homescene"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:onClick="onAddFolderBtnClick"
+                android:src="@drawable/folder_close" />
+
+            <ImageButton
+                android:id="@+id/add_file_expand_homescene"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="0dp"
+                android:layout_toStartOf="@+id/add_folder_expand_homescene"
+                android:src="@drawable/file" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

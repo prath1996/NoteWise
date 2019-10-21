@@ -1,15 +1,12 @@
 package FileHandling;
 
-import com.noodle.Id;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Folder {
 
-    @Id
-    private long id;
+    private String ID;
 
     private String folderName;
     private Timestamp firstCreated;
@@ -33,12 +30,12 @@ public class Folder {
 
 
     // Folder
-    public long getID() {
-        return id;
+    public String getID() {
+        return ID;
     }
 
-    void setID(long id) {
-        this.id = id;
+    void setID(String id) {
+        this.ID = id;
     }
 
     public String getName() {
