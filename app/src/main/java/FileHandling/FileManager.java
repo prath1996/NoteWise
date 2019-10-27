@@ -1,7 +1,5 @@
 package FileHandling;
 
-import android.util.Log;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,16 +67,25 @@ public class FileManager {
         }
     }
 
-    public void deleteFolder(String folderID) {
-        dbHandler.deleteFolder(folderID);
-        folderDict.remove(folderID);
+    public void deleteFolder() throws Exception{
+        try {
+            String folderID = contextInfo.folderID;
+            dbHandler.deleteFolder(folderID);
+            folderDict.remove(folderID);
+        } catch (Exception e) {
+            throw new Exception(e.toString());
+        }
     }
 
-    public void renameFolder(String folderID, String newName) {
-        Folder folder = getFolder(folderID, false);
-        folder.rename(newName);
-        dbHandler.addToUpdate(folderID);
-        dbHandler.update();
+    public void renameFolder(String newName) throws Exception{
+        if (getFolder(newName, true) == null) {
+            Folder folder = getFolder(contextInfo.folderID, false);
+            folder.rename(newName);
+            dbHandler.addToUpdate(contextInfo.folderID);
+            dbHandler.update();
+            return;
+        }
+        throw new Exception("Folder name already exists");
     }
 
     public HashMap<String, Folder> getAllFolders() {
@@ -88,42 +95,50 @@ public class FileManager {
 
 
     // Files
-    public void addNoteFile(String fileName) {
+    public void addNoteFile(String fileName) throws Exception{
         Folder folder = getFolder(contextInfo.folderID, false);
         if (folder != null) {
             File file = new NoteFile(fileName);
             folder.addFile(file);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
+            return;
         }
+        throw new Exception("Folder not found");
     }
 
-    public void addTodoFile(String fileName) {
+    public void addTodoFile(String fileName) throws Exception {
         Folder folder = getFolder(contextInfo.folderID, false);
         if (folder != null) {
             File file = new TodoFile(fileName);
             folder.addFile(file);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
+            return;
         }
+        throw new Exception("File name already exists");
     }
     
-    public void deleteFile(String fileName) {
+    public void deleteFile(String fileName) throws Exception{
         Folder folder = getFolder(contextInfo.folderID, false);
         if (folder != null) {
             folder.deleteFile(fileName);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
+            return;
         }
+        throw new Exception("File name already exists");
     }
 
-    public void renameFile(String oldName, String newName) {
+    public void renameFile(String oldName, String newName) throws Exception {
         Folder folder = getFolder(contextInfo.folderID, false);
         if (folder != null) {
             folder.renameFile(oldName, newName);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
+            return;
         }
+        throw new Exception("File name already exists");
     }
 
     public List<File> getAllFiles() {

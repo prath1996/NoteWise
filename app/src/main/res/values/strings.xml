@@ -14,6 +14,13 @@
     <string name="name_empty">Name can\'t be empty</string>
     <string name="delete_folder">Delete folder</string>
     <string name="rename_folder">Rename folder</string>
+    <string name="rename_folder_btn">Rename</string>
+    <string name="folder_already_exists">Folder by this name already exists</string>
+    <string name="file_already_exists">File by this name already exists</string>
+    <string name="empty_field_err">Field can\'t be empty</string>
+    <string name="TAG_err">NoteWiseErr</string>
+    <string name="TAG_debug">NoteWiseDebug</string>
+    <string name="yes">Yes</string>
 
 
     <string-array name="group1">

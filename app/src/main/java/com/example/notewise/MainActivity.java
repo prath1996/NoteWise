@@ -6,10 +6,8 @@ import androidx.fragment.app.DialogFragment;
 import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +24,7 @@ import FileHandling.FileManager;
 import FileHandling.Folder;
 import io.paperdb.Paper;
 
-public class MainActivity extends AppCompatActivity implements AddNewFileDialog.NoticeDialogListener, AddFolderDialog.NoticeDialogListener{
+public class MainActivity extends AppCompatActivity {
 
     private ExpandingList expandingList;
 
@@ -35,11 +33,6 @@ public class MainActivity extends AppCompatActivity implements AddNewFileDialog.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initializeDB();
-
-//        FileManager fmInstance = FileManager.getInstance();
-//        fmInstance.createFolder("My folder");
-//
-//        updateExpandingList();
     }
 
     private void initializeDB() {
@@ -70,18 +63,84 @@ public class MainActivity extends AppCompatActivity implements AddNewFileDialog.
                     fmInstance.updateContext(entry.getKey(), "");
                     switch (item1.getItemId()) {
                         case R.id.menu_add_file:
-                            DialogFragment dialog = new AddNewFileDialog();
-                            dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+                            DialogFragment dialog1 = new TextDialog(getString(R.string.add_new_file),
+                                    getString(R.string.add_file_hint),
+                                    getString(R.string.create_note_file),
+                                    getString(R.string.create_todo_file),
+                                    new TextDialog.DialogBridge() {
+                                        @Override
+                                        public void onPositiveClick(String editText) throws Exception{
+                                            try {
+                                                FileManager.getInstance().addNoteFile(editText);
+                                                updateExpandingList();
+                                                RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
+                                                floatingAddExpand.setVisibility(View.GONE);
+                                            } catch (Exception e) {
+                                                throw new Exception("Create Note file: ".concat(e.toString()));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onNeutralClick(String editText) throws Exception{
+                                            try {
+                                                FileManager.getInstance().addTodoFile(editText);
+                                                updateExpandingList();
+                                                RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
+                                                floatingAddExpand.setVisibility(View.GONE);
+                                            } catch (Exception e) {
+                                                throw new Exception("Create ToDo file: ".concat(e.toString()));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onNegativeClick() {}
+                                    });
+                            dialog1.show(getSupportFragmentManager(), "NoticeDialogFragment");
                             return true;
                         case R.id.menu_rename_folder:
+                            DialogFragment dialog2 = new TextDialog(getString(R.string.rename_folder),
+                                    getString(R.string.add_folder_hint),
+                                    getString(R.string.rename_folder_btn),
+                                    null,
+                                    new TextDialog.DialogBridge() {
+                                        @Override
+                                        public void onPositiveClick(String editText) throws Exception{
+                                            try {
+                                                FileManager.getInstance().renameFolder(editText);
+                                                updateExpandingList();
+                                                RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
+                                                floatingAddExpand.setVisibility(View.GONE);
+                                            } catch (Exception e) {
+                                                throw new Exception("Rename folder: ".concat(e.toString()));
+                                            }
+                                        }
 
-                            // rename dialog
+                                        @Override
+                                        public void onNeutralClick(String s) {}
 
+                                        @Override
+                                        public void onNegativeClick() {}
+                                    });
+                            dialog2.show(getSupportFragmentManager(), "NoticeDialogFragment");
                             return true;
                         case R.id.menu_delete_folder:
+                            DialogFragment dialog3 = new SimpleDialog(getString(R.string.delete_folder),
+                                    getString(R.string.yes),
+                                    new SimpleDialog.DialogBridge() {
+                                        @Override
+                                        public void onPositiveClick() throws Exception{
+                                            try {
+                                                FileManager.getInstance().deleteFolder();
+                                                updateExpandingList();
+                                            } catch (Exception e) {
+                                                throw new Exception("Delete Folder: ".concat(e.toString()));
+                                            }
+                                        }
 
-                            // delete folder
-
+                                        @Override
+                                        public void onNegativeClick() {}
+                                    });
+                            dialog3.show(getSupportFragmentManager(), "NoticeDialogFragment");
                             return true;
                         default:
                             return false;
@@ -91,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements AddNewFileDialog.
             });
 
             List<File> fileList = fmInstance.getAllFiles(entry.getKey());
-
             if (fileList != null) {
                 int size = fileList.size();
                 item.createSubItems(size);
@@ -102,8 +160,8 @@ public class MainActivity extends AppCompatActivity implements AddNewFileDialog.
                     ((TextView) fileView.findViewById(R.id.child_text)).setText(file.getName());
                     count++;
                 }
-            item.setIndicatorColorRes(R.color.colorFolder);
-            item.setIndicatorIconRes(R.drawable.folder_close);
+                item.setIndicatorColorRes(R.color.colorFolder);
+                item.setIndicatorIconRes(R.drawable.folder_close);
             }
         }
     }
@@ -113,75 +171,38 @@ public class MainActivity extends AppCompatActivity implements AddNewFileDialog.
         createExpandingList();
     }
 
-
-    @Override
-    public void createNoteFile(String fileName) {
-        FileManager.getInstance().addNoteFile(fileName);
-        updateExpandingList();
-    }
-
-    @Override
-    public void createTodoFile(String fileName) {
-        FileManager.getInstance().addTodoFile(fileName);
-        updateExpandingList();
-    }
-
-    @Override
-    public void createFolder(String folderName) {
-        FileManager.getInstance().createFolder(folderName);
-        updateExpandingList();
-        RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
-        floatingAddExpand.setVisibility(View.GONE);
-    }
-
-    public void onAddFileBtnClick(View view) {
-//        String folderName = ((TextView)findViewById(R.id.parent_text)).getText().toString();
-//        FileManager fmInstance = FileManager.getInstance();
-//        Folder folder = fmInstance.getFolder(folderName, true);
-//        fmInstance.updateContext(folder.getID(), "");
-
-//        DialogFragment dialog = new AddNewFileDialog();
-//        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-    }
-
-    public void onFloatingAddBtnClick(View view) {
+    public void floatingAddBtnClick(View view) {
         ViewGroup transitionContainer = findViewById(R.id.floating_layout_homescene);
         TransitionManager.beginDelayedTransition(transitionContainer);
         RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
         floatingAddExpand.setVisibility(floatingAddExpand.getVisibility() == View.VISIBLE? View.GONE : View.VISIBLE);
     }
 
-    public void onAddFolderBtnClick(View view) {
-        DialogFragment dialog = new AddFolderDialog();
+    public void addFolderBtnClick(View view) {
+        DialogFragment dialog = new TextDialog(getString(R.string.add_new_folder),
+                getString(R.string.add_folder_hint),
+                getString(R.string.create_folder),
+                null,
+                new TextDialog.DialogBridge() {
+                    @Override
+                    public void onPositiveClick(String editText) throws Exception{
+                        try {
+                            FileManager.getInstance().createFolder(editText);
+                            updateExpandingList();
+                            RelativeLayout floatingAddExpand = findViewById(R.id.add_floating_expand_layout);
+                            floatingAddExpand.setVisibility(View.GONE);
+                        } catch (Exception e) {
+                            throw new Exception("Create Folder: ".concat(e.toString()));
+                        }
+                    }
+
+                    @Override
+                    public void onNeutralClick(String s) {}
+
+                    @Override
+                    public void onNegativeClick() {}
+                });
         dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-    }
-
-    public void openFolderMenu(View view) {
-        PopupMenu folderMenuPopup = new PopupMenu(this, view);
-        MenuInflater inflater = folderMenuPopup.getMenuInflater();
-        inflater.inflate(R.menu.folder_menu, folderMenuPopup.getMenu());
-        folderMenuPopup.setOnMenuItemClickListener(item1 -> {
-            switch (item1.getItemId()) {
-                case R.id.menu_add_file:
-                    String folderName = ((TextView)findViewById(R.id.parent_text)).getText().toString();
-                    FileManager fmInstance = FileManager.getInstance();
-                    Folder folder = fmInstance.getFolder(folderName, true);
-                    fmInstance.updateContext(folder.getID(), "");
-
-                    DialogFragment dialog = new AddNewFileDialog();
-                    dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-                    return true;
-                case R.id.menu_rename_folder:
-                    // do your code
-                    return true;
-                case R.id.menu_delete_folder:
-                    // do your code
-                    return true;
-                default:
-                    return false;
-            }
-        });
-        folderMenuPopup.show();
     }
 }
 

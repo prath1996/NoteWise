@@ -44,12 +44,8 @@ public class DBHandler {
     }
 
     void createFolder(Folder folder) {
-        try {
-            folder.setID(createFolderID());
-            Paper.book().write(folder.getID(), folder);
-        } catch (Exception e) {
-            Log.e(DB_MOD_ERROR, e.getMessage());
-        }
+        folder.setID(createFolderID());
+        Paper.book().write(folder.getID(), folder);
     }
 
     void addToUpdate(String folderID) {
@@ -57,11 +53,7 @@ public class DBHandler {
     }
 
     void deleteFolder(String folderID) {
-        try {
-            Paper.book().delete("folderID");
-        } catch (Exception e) {
-            Log.e(DB_MOD_ERROR, e.getMessage());
-        }
+        Paper.book().delete(folderID);
     }
 
     HashMap<String, Folder> getAllData() {

@@ -92,10 +92,6 @@ public class Folder {
         this.files.add(file);
     }
 
-//    public void setFiles(TreeMap<String, File> files) {
-//        this.files = files;
-//    }
-
     void deleteFile(String fileName) {
         File file = getFile(fileName);
         if (file != null) {
