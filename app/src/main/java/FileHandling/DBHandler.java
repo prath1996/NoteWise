@@ -25,7 +25,6 @@ public class DBHandler {
     }
 
     private DBHandler() {
-        Paper.book().destroy();
         updateKeys = new HashSet<>();
     }
 

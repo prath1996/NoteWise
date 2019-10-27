@@ -78,8 +78,11 @@ public class FileManager {
     }
 
     public void renameFolder(String newName) throws Exception{
+        Folder folder = getFolder(contextInfo.folderID, false);
+        if (newName.equals(folder.getName())) {
+            return;
+        }
         if (getFolder(newName, true) == null) {
-            Folder folder = getFolder(contextInfo.folderID, false);
             folder.rename(newName);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
@@ -133,6 +136,9 @@ public class FileManager {
     public void renameFile(String oldName, String newName) throws Exception {
         Folder folder = getFolder(contextInfo.folderID, false);
         if (folder != null) {
+            if (oldName.equals(newName)) {
+                return;
+            }
             folder.renameFile(oldName, newName);
             dbHandler.addToUpdate(contextInfo.folderID);
             dbHandler.update();
